@@ -1,0 +1,323 @@
+
+[0m[2m[35m$[0m [2m[1mtsc --noEmit[0m
+[96msrc/lib/auditService.ts[0m:[93m2[0m:[93m24[0m - [91merror[0m[90m TS2307: [0mCannot find module '@prisma/client' or its corresponding type declarations.
+
+[7m2[0m import { Prisma } from '@prisma/client'
+[7m [0m [91m                       ~~~~~~~~~~~~~~~~[0m
+
+[96msrc/lib/balanceService.ts[0m:[93m2[0m:[93m79[0m - [91merror[0m[90m TS2307: [0mCannot find module '@prisma/client' or its corresponding type declarations.
+
+[7m2[0m import { Prisma, TransactionType, TransactionSource, TransactionStatus } from '@prisma/client'
+[7m [0m [91m                                                                              ~~~~~~~~~~~~~~~~[0m
+
+[96msrc/middleware/adminGuard.ts[0m:[93m5[0m:[93m22[0m - [91merror[0m[90m TS2307: [0mCannot find module '@prisma/client' or its corresponding type declarations.
+
+[7m5[0m import { Role } from '@prisma/client'
+[7m [0m [91m                     ~~~~~~~~~~~~~~~~[0m
+
+[96msrc/middleware/adminGuard.ts[0m:[93m23[0m:[93m21[0m - [91merror[0m[90m TS2339: [0mProperty 'role' does not exist on type 'string | JwtPayload'.
+  Property 'role' does not exist on type 'string'.
+
+[7m23[0m         if (payload.role !== Role.ADMIN) {
+[7m  [0m [91m                    ~~~~[0m
+
+[96msrc/middleware/adminGuard.ts[0m:[93m28[0m:[93m13[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'user' does not exist in type '{ context?: Record<never, never> | undefined; }'.
+
+[7m28[0m             user: payload
+[7m  [0m [91m            ~~~~[0m
+
+[96msrc/routes/admin/dashboard.ts[0m:[93m4[0m:[93m25[0m - [91merror[0m[90m TS2307: [0mCannot find module 'date-fns' or its corresponding type declarations.
+
+[7m4[0m import { subDays } from 'date-fns'
+[7m [0m [91m                        ~~~~~~~~~~[0m
+
+[96msrc/routes/admin/dashboard.ts[0m:[93m6[0m:[93m64[0m - [91merror[0m[90m TS2345: [0mArgument of type '{ getStats: ImplementedProcedure<Record<never, never>, Record<never, never>, Schema<unknown, unknown>, ZodObject<{ totalUsers: ZodNumber; activeUsers30d: ZodNumber; frozenAccounts: ZodNumber; ... 6 more ...; pendingDepositTotal: ZodNumber; }, "strip", ZodTypeAny, { ...; }, { ...; }>, MergedErrorMap<...>, Record<...>...' is not assignable to parameter of type '{ getStats: Lazyable<Procedure<Record<never, never>, any, Schema<unknown, unknown>, ZodObject<{ totalUsers: ZodNumber; activeUsers30d: ZodNumber; frozenAccounts: ZodNumber; ... 6 more ...; pendingDepositTotal: ZodNumber; }, "strip", ZodTypeAny, { ...; }, { ...; }>, MergedErrorMap<...>, Record<...>>>; ... 9 more ...;...'.
+  Type '{ getStats: ImplementedProcedure<Record<never, never>, Record<never, never>, Schema<unknown, unknown>, ZodObject<{ totalUsers: ZodNumber; activeUsers30d: ZodNumber; frozenAccounts: ZodNumber; ... 6 more ...; pendingDepositTotal: ZodNumber; }, "strip", ZodTypeAny, { ...; }, { ...; }>, MergedErrorMap<...>, Record<...>...' is missing the following properties from type '{ getStats: Lazyable<Procedure<Record<never, never>, any, Schema<unknown, unknown>, ZodObject<{ totalUsers: ZodNumber; activeUsers30d: ZodNumber; frozenAccounts: ZodNumber; ... 6 more ...; pendingDepositTotal: ZodNumber; }, "strip", ZodTypeAny, { ...; }, { ...; }>, MergedErrorMap<...>, Record<...>>>; ... 9 more ...;...': users, deposits, withdrawals, plans, and 5 more.
+
+[7m  6[0m export const dashboardRouter = implement(adminContract).router({
+[7m   [0m [91m                                                               ~[0m
+[7m  7[0m     getStats: implement(adminContract.getStats).handler(async () => {
+[7m   [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[7m...[0m 
+[7m 96[0m     })
+[7m   [0m [91m~~~~~~[0m
+[7m 97[0m })
+[7m   [0m [91m~[0m
+
+[96msrc/routes/admin/deposits.ts[0m:[93m7[0m:[93m71[0m - [91merror[0m[90m TS2307: [0mCannot find module '@prisma/client' or its corresponding type declarations.
+
+[7m7[0m import { TransactionSource, TransactionStatus, TransactionType } from '@prisma/client'
+[7m [0m [91m                                                                      ~~~~~~~~~~~~~~~~[0m
+
+[96msrc/routes/admin/deposits.ts[0m:[93m91[0m:[93m13[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'metadata' does not exist in type '{ adminId: string; action: string; entity: string; entityId?: string | undefined; before?: any; after?: any; ipAddress?: string | undefined; userAgent?: string | undefined; }'.
+
+[7m91[0m             metadata: { reason: input.reason }
+[7m  [0m [91m            ~~~~~~~~[0m
+
+[96msrc/routes/admin/deposits.ts[0m:[93m113[0m:[93m13[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'metadata' does not exist in type '{ adminId: string; action: string; entity: string; entityId?: string | undefined; before?: any; after?: any; ipAddress?: string | undefined; userAgent?: string | undefined; }'.
+
+[7m113[0m             metadata: { amount: input.amount, reason: input.reason }
+[7m   [0m [91m            ~~~~~~~~[0m
+
+[96msrc/routes/admin/deposits.ts[0m:[93m149[0m:[93m13[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'metadata' does not exist in type '{ adminId: string; action: string; entity: string; entityId?: string | undefined; before?: any; after?: any; ipAddress?: string | undefined; userAgent?: string | undefined; }'.
+
+[7m149[0m             metadata: { count: input.transactionIds.length, successCount }
+[7m   [0m [91m            ~~~~~~~~[0m
+
+[96msrc/routes/admin/index.ts[0m:[93m15[0m:[93m38[0m - [91merror[0m[90m TS2345: [0mArgument of type '{ getStats: Procedure<MergedInitialContext<Record<never, never>, Record<never, never>, Record<never, never>>, any, Schema<unknown, unknown>, ZodObject<...>, MergedErrorMap<...>, Record<...>> | Lazy<...>; ... 11 more ...; concat<UOutContext extends IntersectPick<...>, UInput extends unknown, UInContext extends Contex...' is not assignable to parameter of type 'Router<ContractRouter<Record<never, never>>, Record<never, never>>'.
+  Type '{ getStats: Procedure<MergedInitialContext<Record<never, never>, Record<never, never>, Record<never, never>>, any, Schema<unknown, unknown>, ZodObject<...>, MergedErrorMap<...>, Record<...>> | Lazy<...>; ... 11 more ...; concat<UOutContext extends IntersectPick<...>, UInput extends unknown, UInContext extends Contex...' is not assignable to type '{ [x: string]: Lazyable<Procedure<Record<never, never>, any, any, any, any, Record<never, never>> | ...>; }'.
+    Property 'mapInput' is incompatible with index signature.
+      Type '<UInput>(map: MapInputMiddleware<UInput, unknown>) => DecoratedMiddleware<Record<never, never>, Record<never, never>, UInput, any, any, Record<never, never>>' is not assignable to type 'Lazyable<Procedure<Record<never, never>, any, any, any, any, Record<never, never>> | { [x: string]: Lazyable<Procedure<Record<never, never>, any, any, any, any, Record<...>> | ...>; }>'.
+
+[7m 15[0m export const adminRouter = os.router({
+[7m   [0m [91m                                     ~[0m
+[7m 16[0m     // Attach guards to the entire admin router
+[7m   [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[7m...[0m 
+[7m 30[0m     announcements: announcementsRouter,
+[7m   [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[7m 31[0m })
+[7m   [0m [91m~[0m
+
+[96msrc/routes/admin/investments.ts[0m:[93m6[0m:[93m70[0m - [91merror[0m[90m TS2307: [0mCannot find module '@prisma/client' or its corresponding type declarations.
+
+[7m6[0m import { InvestmentStatus, TransactionSource, TransactionType } from '@prisma/client'
+[7m [0m [91m                                                                     ~~~~~~~~~~~~~~~~[0m
+
+[96msrc/routes/admin/tickets.ts[0m:[93m63[0m:[93m13[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'metadata' does not exist in type '{ adminId: string; action: string; entity: string; entityId?: string | undefined; before?: any; after?: any; ipAddress?: string | undefined; userAgent?: string | undefined; }'.
+
+[7m63[0m             metadata: { isInternal: input.isInternal }
+[7m  [0m [91m            ~~~~~~~~[0m
+
+[96msrc/routes/admin/transactions.ts[0m:[93m6[0m:[93m71[0m - [91merror[0m[90m TS2307: [0mCannot find module '@prisma/client' or its corresponding type declarations.
+
+[7m6[0m import { TransactionSource, TransactionStatus, TransactionType } from '@prisma/client'
+[7m [0m [91m                                                                      ~~~~~~~~~~~~~~~~[0m
+
+[96msrc/routes/admin/users.ts[0m:[93m8[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"../../lib/bcrypt"' has no exported member 'generateTemporaryPassword'.
+
+[7m8[0m import { generateTemporaryPassword, hashPassword } from '../../lib/bcrypt'
+[7m [0m [91m         ~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/routes/admin/users.ts[0m:[93m79[0m:[93m13[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'metadata' does not exist in type '{ adminId: string; action: string; entity: string; entityId?: string | undefined; before?: any; after?: any; ipAddress?: string | undefined; userAgent?: string | undefined; }'.
+
+[7m79[0m             metadata: { balances: input.balances, reason: input.reason }
+[7m  [0m [91m            ~~~~~~~~[0m
+
+[96msrc/routes/admin/users.ts[0m:[93m131[0m:[93m13[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'metadata' does not exist in type '{ adminId: string; action: string; entity: string; entityId?: string | undefined; before?: any; after?: any; ipAddress?: string | undefined; userAgent?: string | undefined; }'.
+
+[7m131[0m             metadata: { status: input.status, note: input.adminNote }
+[7m   [0m [91m            ~~~~~~~~[0m
+
+[96msrc/routes/admin/users.ts[0m:[93m151[0m:[93m13[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'metadata' does not exist in type '{ adminId: string; action: string; entity: string; entityId?: string | undefined; before?: any; after?: any; ipAddress?: string | undefined; userAgent?: string | undefined; }'.
+
+[7m151[0m             metadata: { newRole: input.role }
+[7m   [0m [91m            ~~~~~~~~[0m
+
+[96msrc/routes/admin/withdrawals.ts[0m:[93m7[0m:[93m71[0m - [91merror[0m[90m TS2307: [0mCannot find module '@prisma/client' or its corresponding type declarations.
+
+[7m7[0m import { TransactionSource, TransactionStatus, TransactionType } from '@prisma/client'
+[7m [0m [91m                                                                      ~~~~~~~~~~~~~~~~[0m
+
+[96msrc/routes/admin/withdrawals.ts[0m:[93m91[0m:[93m13[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'metadata' does not exist in type '{ adminId: string; action: string; entity: string; entityId?: string | undefined; before?: any; after?: any; ipAddress?: string | undefined; userAgent?: string | undefined; }'.
+
+[7m91[0m             metadata: { reason: input.reason }
+[7m  [0m [91m            ~~~~~~~~[0m
+
+[96msrc/routes/admin/withdrawals.ts[0m:[93m113[0m:[93m13[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'metadata' does not exist in type '{ adminId: string; action: string; entity: string; entityId?: string | undefined; before?: any; after?: any; ipAddress?: string | undefined; userAgent?: string | undefined; }'.
+
+[7m113[0m             metadata: { note: input.note }
+[7m   [0m [91m            ~~~~~~~~[0m
+
+[96msrc/routes/auth.ts[0m:[93m11[0m:[93m50[0m - [91merror[0m[90m TS2345: [0mArgument of type '({ input, context }: ProcedureHandlerOptions<Record<never, never>, { email: string; password: string; }, ORPCErrorConstructorMap<MergedErrorMap<Record<never, never>, Record<never, never>>>, Record<...>>) => Promise<...>' is not assignable to parameter of type 'ProcedureHandler<Record<never, never>, { email: string; password: string; }, { user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { ...; } | undefined; }; }, MergedErrorMap<...>, Record<...>>'.
+  Type 'Promise<{ user: { id: string; email: string; role: Role; }; }>' is not assignable to type 'Promisable<{ user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; ... 5 more ...; updatedAt: Date; } | undefined; }; }>'.
+    Type 'Promise<{ user: { id: string; email: string; role: Role; }; }>' is not assignable to type 'PromiseLike<{ user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; ... 5 more ...; updatedAt: Date; } | undefined; }; }>'.
+      Types of property 'then' are incompatible.
+        Type '<TResult1 = { user: { id: string; email: string; role: Role; }; }, TResult2 = never>(onfulfilled?: ((value: { user: { id: string; email: string; role: Role; }; }) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | ... 1 more ... | undefined) => Prom...' is not assignable to type '<TResult1 = { user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; ... 5 more ...; updatedAt: Date; } | undefined; }; }, TResult2 = never>(onfulfilled?: ((value: { ...; }) => TResult1 | P...'.
+          Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+            Types of parameters 'value' and 'value' are incompatible.
+              Type '{ user: { id: string; email: string; role: $Enums.Role; }; }' is not assignable to type '{ user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; ... 5 more ...; updatedAt: Date; } | undefined; }; }'.
+                Types of property 'user' are incompatible.
+                  Type '{ id: string; email: string; role: Role; }' is missing the following properties from type '{ id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; available: string | number; ... 4 more ...; updatedAt: Date; } | undefined; }': createdAt, kycStatus, isActive
+
+[7m11[0m     login: implement(authContract.login).handler(async ({ input, context }) => {
+[7m  [0m [91m                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/routes/auth.ts[0m:[93m46[0m:[93m56[0m - [91merror[0m[90m TS2345: [0mArgument of type '({ input }: ProcedureHandlerOptions<Record<never, never>, { email: string; password: string; }, ORPCErrorConstructorMap<MergedErrorMap<Record<never, never>, Record<never, never>>>, Record<...>>) => Promise<...>' is not assignable to parameter of type 'ProcedureHandler<Record<never, never>, { email: string; password: string; }, { user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { ...; } | undefined; }; }, MergedErrorMap<...>, Record<...>>'.
+  Type 'Promise<{ user: { id: string; email: string; role: Role; }; }>' is not assignable to type 'Promisable<{ user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; ... 5 more ...; updatedAt: Date; } | undefined; }; }>'.
+    Type 'Promise<{ user: { id: string; email: string; role: Role; }; }>' is not assignable to type 'PromiseLike<{ user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; ... 5 more ...; updatedAt: Date; } | undefined; }; }>'.
+      Types of property 'then' are incompatible.
+        Type '<TResult1 = { user: { id: string; email: string; role: Role; }; }, TResult2 = never>(onfulfilled?: ((value: { user: { id: string; email: string; role: Role; }; }) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | ... 1 more ... | undefined) => Prom...' is not assignable to type '<TResult1 = { user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; ... 5 more ...; updatedAt: Date; } | undefined; }; }, TResult2 = never>(onfulfilled?: ((value: { ...; }) => TResult1 | P...'.
+          Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+            Types of parameters 'value' and 'value' are incompatible.
+              Type '{ user: { id: string; email: string; role: $Enums.Role; }; }' is not assignable to type '{ user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; ... 5 more ...; updatedAt: Date; } | undefined; }; }'.
+                Types of property 'user' are incompatible.
+                  Type '{ id: string; email: string; role: Role; }' is missing the following properties from type '{ id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; available: string | number; ... 4 more ...; updatedAt: Date; } | undefined; }': createdAt, kycStatus, isActive
+
+[7m46[0m     register: implement(authContract.register).handler(async ({ input }) => {
+[7m  [0m [91m                                                       ~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/routes/auth.ts[0m:[93m65[0m:[93m44[0m - [91merror[0m[90m TS2345: [0mArgument of type '({ context }: ProcedureHandlerOptions<Record<never, never>, unknown, ORPCErrorConstructorMap<MergedErrorMap<Record<never, never>, Record<never, never>>>, Record<...>>) => Promise<...>' is not assignable to parameter of type 'ProcedureHandler<Record<never, never>, unknown, { user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { ...; } | undefined; }; }, MergedErrorMap<...>, Record<...>>'.
+  Type 'Promise<{ user: { id: string; email: string; role: Role; }; }>' is not assignable to type 'Promisable<{ user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; ... 5 more ...; updatedAt: Date; } | undefined; }; }>'.
+    Type 'Promise<{ user: { id: string; email: string; role: Role; }; }>' is not assignable to type 'PromiseLike<{ user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; ... 5 more ...; updatedAt: Date; } | undefined; }; }>'.
+      Types of property 'then' are incompatible.
+        Type '<TResult1 = { user: { id: string; email: string; role: Role; }; }, TResult2 = never>(onfulfilled?: ((value: { user: { id: string; email: string; role: Role; }; }) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | ... 1 more ... | undefined) => Prom...' is not assignable to type '<TResult1 = { user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; ... 5 more ...; updatedAt: Date; } | undefined; }; }, TResult2 = never>(onfulfilled?: ((value: { ...; }) => TResult1 | P...'.
+          Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+            Types of parameters 'value' and 'value' are incompatible.
+              Type '{ user: { id: string; email: string; role: $Enums.Role; }; }' is not assignable to type '{ user: { id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; ... 5 more ...; updatedAt: Date; } | undefined; }; }'.
+                Types of property 'user' are incompatible.
+                  Type '{ id: string; email: string; role: Role; }' is missing the following properties from type '{ id: string; createdAt: Date; email: string; role: "USER" | "ADMIN"; kycStatus: "PENDING" | "VERIFIED" | "REJECTED"; isActive: boolean; balance?: { id: string; userId: string; available: string | number; ... 4 more ...; updatedAt: Date; } | undefined; }': createdAt, kycStatus, isActive
+
+[7m65[0m     me: implement(authContract.me).handler(async ({ context }) => {
+[7m  [0m [91m                                           ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/routes/investments.ts[0m:[93m7[0m:[93m59[0m - [91merror[0m[90m TS2345: [0mArgument of type '({ input, context }: ProcedureHandlerOptions<Record<never, never>, { planId: string; amount: string | number; }, ORPCErrorConstructorMap<MergedErrorMap<Record<never, never>, Record<never, never>>>, Record<...>>) => Promise<...>' is not assignable to parameter of type 'ProcedureHandler<Record<never, never>, { planId: string; amount: string | number; }, { investment: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; ... 6 more ...; adminNote?: string | ... 1 more ... | undefined; }; }, MergedErrorMap<...>, Record<...>>'.
+  Type 'Promise<{ investment: { id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }; }>' is not assignable to type 'Promisable<{ investment: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }; }>'.
+    Type 'Promise<{ investment: { id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }; }>' is not assignable to type 'PromiseLike<{ investment: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }; }>'.
+      Types of property 'then' are incompatible.
+        Type '<TResult1 = { investment: { id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }; }, TResult2 = never>(onfulfilled?: ((value: { investment: { id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }; }) => TResult1 | PromiseLike<...>) ...' is not assignable to type '<TResult1 = { investment: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }; }, TResult2 = neve...'.
+          Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+            Types of parameters 'value' and 'value' are incompatible.
+              Type '{ investment: { id: string; userId: string; amount: number; plan: any; status: $Enums.InvestmentStatus; roi: number; }; }' is not assignable to type '{ investment: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }; }'.
+                Types of property 'investment' are incompatible.
+                  Type '{ id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }' is missing the following properties from type '{ status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }': createdAt, updatedAt, planId, isPaused
+
+[7m7[0m     create: implement(investmentsContract.create).handler(async ({ input, context }) => {
+[7m [0m [91m                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/routes/investments.ts[0m:[93m20[0m:[93m13[0m - [91merror[0m[90m TS2322: [0mType '{ userId: any; amount: string | number; plan: any; roi: any; }' is not assignable to type '(Without<InvestmentCreateInput, InvestmentUncheckedCreateInput> & InvestmentUncheckedCreateInput) | (Without<...> & InvestmentCreateInput)'.
+  Type '{ userId: any; amount: string | number; plan: any; roi: any; }' is not assignable to type 'Without<InvestmentUncheckedCreateInput, InvestmentCreateInput> & InvestmentCreateInput'.
+    Property 'user' is missing in type '{ userId: any; amount: string | number; plan: any; roi: any; }' but required in type 'InvestmentCreateInput'.
+
+[7m20[0m             data: {
+[7m  [0m [91m            ~~~~[0m
+
+  [96m../../node_modules/.bun/@prisma+client@5.22.0+f01948e2630c7aba/node_modules/.prisma/client/index.d.ts[0m:[93m16161[0m:[93m5[0m
+    [7m16161[0m     user: UserCreateNestedOneWithoutInvestmentsInput
+    [7m     [0m [96m    ~~~~[0m
+    'user' is declared here.
+  [96m../../node_modules/.bun/@prisma+client@5.22.0+f01948e2630c7aba/node_modules/.prisma/client/index.d.ts[0m:[93m7312[0m:[93m5[0m
+    [7m7312[0m     data: XOR<InvestmentCreateInput, InvestmentUncheckedCreateInput>
+    [7m    [0m [96m    ~~~~[0m
+    The expected type comes from property 'data' which is declared here on type '{ select?: InvestmentSelect<DefaultArgs> | null | undefined; include?: InvestmentInclude<DefaultArgs> | null | undefined; data: (Without<...> & InvestmentUncheckedCreateInput) | (Without<...> & InvestmentCreateInput); }'
+
+[96msrc/routes/investments.ts[0m:[93m23[0m:[93m29[0m - [91merror[0m[90m TS2339: [0mProperty 'plan' does not exist on type '{ planId: string; amount: string | number; }'.
+
+[7m23[0m                 plan: input.plan,
+[7m  [0m [91m                            ~~~~[0m
+
+[96msrc/routes/investments.ts[0m:[93m24[0m:[93m22[0m - [91merror[0m[90m TS7053: [0mElement implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ STARTER: number; GROWTH: number; PREMIUM: number; ELITE: number; }'.
+
+[7m24[0m                 roi: roiMap[input.plan]
+[7m  [0m [91m                     ~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/routes/investments.ts[0m:[93m24[0m:[93m35[0m - [91merror[0m[90m TS2339: [0mProperty 'plan' does not exist on type '{ planId: string; amount: string | number; }'.
+
+[7m24[0m                 roi: roiMap[input.plan]
+[7m  [0m [91m                                  ~~~~[0m
+
+[96msrc/routes/investments.ts[0m:[93m28[0m:[93m130[0m - [91merror[0m[90m TS2339: [0mProperty 'plan' does not exist on type '{ status: InvestmentStatus; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: Decimal; roi: Decimal; isPaused: boolean; adminNote: string | null; }'.
+
+[7m28[0m         return { investment: { id: investment.id, userId: investment.userId, amount: Number(investment.amount), plan: investment.plan, status: investment.status, roi: Number(investment.roi) } }
+[7m  [0m [91m                                                                                                                                 ~~~~[0m
+
+[96msrc/routes/investments.ts[0m:[93m31[0m:[93m55[0m - [91merror[0m[90m TS2345: [0mArgument of type '({ context }: ProcedureHandlerOptions<Record<never, never>, unknown, ORPCErrorConstructorMap<MergedErrorMap<Record<never, never>, Record<never, never>>>, Record<...>>) => Promise<...>' is not assignable to parameter of type 'ProcedureHandler<Record<never, never>, unknown, { investments: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; ... 4 more ...; adminNote?: string | ... 1 more ... | undefined; }[]; }, MergedErrorMap<...>, Record<...>>'.
+  Type 'Promise<{ investments: { id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }[]; }>' is not assignable to type 'Promisable<{ investments: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }[]; }>'.
+    Type 'Promise<{ investments: { id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }[]; }>' is not assignable to type 'PromiseLike<{ investments: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }[]; }>'.
+      Types of property 'then' are incompatible.
+        Type '<TResult1 = { investments: { id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }[]; }, TResult2 = never>(onfulfilled?: ((value: { investments: { id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }[]; }) => TResult1 | PromiseLike<...' is not assignable to type '<TResult1 = { investments: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }[]; }, TResult2 = n...'.
+          Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+            Types of parameters 'value' and 'value' are incompatible.
+              Type '{ investments: { id: string; userId: string; amount: number; plan: any; status: $Enums.InvestmentStatus; roi: number; }[]; }' is not assignable to type '{ investments: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }[]; }'.
+                Types of property 'investments' are incompatible.
+                  Type '{ id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }[]' is not assignable to type '{ status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }[]'.
+                    Type '{ id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }' is missing the following properties from type '{ status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }': createdAt, updatedAt, planId, isPaused
+
+[7m31[0m     list: implement(investmentsContract.list).handler(async ({ context }) => {
+[7m  [0m [91m                                                      ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/routes/investments.ts[0m:[93m40[0m:[93m127[0m - [91merror[0m[90m TS2339: [0mProperty 'plan' does not exist on type '{ status: InvestmentStatus; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: Decimal; roi: Decimal; isPaused: boolean; adminNote: string | null; }'.
+
+[7m40[0m         return { investments: investments.map(inv => ({ id: inv.id, userId: inv.userId, amount: Number(inv.amount), plan: inv.plan, status: inv.status, roi: Number(inv.roi) })) }
+[7m  [0m [91m                                                                                                                              ~~~~[0m
+
+[96msrc/routes/investments.ts[0m:[93m43[0m:[93m61[0m - [91merror[0m[90m TS2345: [0mArgument of type '({ input, context }: ProcedureHandlerOptions<Record<never, never>, { id: string; }, ORPCErrorConstructorMap<MergedErrorMap<Record<never, never>, Record<never, never>>>, Record<...>>) => Promise<...>' is not assignable to parameter of type 'ProcedureHandler<Record<never, never>, { id: string; }, { investment: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; ... 5 more ...; adminNote?: string | ... 1 more ... | undefined; }; }, MergedErrorMap<...>, Record<...>>'.
+  Type 'Promise<{ investment: { id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }; }>' is not assignable to type 'Promisable<{ investment: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }; }>'.
+    Type 'Promise<{ investment: { id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }; }>' is not assignable to type 'PromiseLike<{ investment: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }; }>'.
+      Types of property 'then' are incompatible.
+        Type '<TResult1 = { investment: { id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }; }, TResult2 = never>(onfulfilled?: ((value: { investment: { id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }; }) => TResult1 | PromiseLike<...>) ...' is not assignable to type '<TResult1 = { investment: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }; }, TResult2 = neve...'.
+          Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+            Types of parameters 'value' and 'value' are incompatible.
+              Type '{ investment: { id: string; userId: string; amount: number; plan: any; status: $Enums.InvestmentStatus; roi: number; }; }' is not assignable to type '{ investment: { status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }; }'.
+                Types of property 'investment' are incompatible.
+                  Type '{ id: string; userId: string; amount: number; plan: any; status: InvestmentStatus; roi: number; }' is missing the following properties from type '{ status: "ACTIVE" | "COMPLETED" | "CANCELLED"; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: string | number; roi: string | number; isPaused: boolean; plan?: { ...; } | undefined; adminNote?: string | ... 1 more ... | undefined; }': createdAt, updatedAt, planId, isPaused
+
+[7m43[0m     getById: implement(investmentsContract.getById).handler(async ({ input, context }) => {
+[7m  [0m [91m                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/routes/investments.ts[0m:[93m55[0m:[93m130[0m - [91merror[0m[90m TS2339: [0mProperty 'plan' does not exist on type '{ status: InvestmentStatus; id: string; createdAt: Date; userId: string; updatedAt: Date; planId: string; amount: Decimal; roi: Decimal; isPaused: boolean; adminNote: string | null; }'.
+
+[7m55[0m         return { investment: { id: investment.id, userId: investment.userId, amount: Number(investment.amount), plan: investment.plan, status: investment.status, roi: Number(investment.roi) } }
+[7m  [0m [91m                                                                                                                                 ~~~~[0m
+
+[96msrc/routes/transactions.ts[0m:[93m7[0m:[93m56[0m - [91merror[0m[90m TS2345: [0mArgument of type '({ context }: ProcedureHandlerOptions<Record<never, never>, unknown, ORPCErrorConstructorMap<MergedErrorMap<Record<never, never>, Record<never, never>>>, Record<...>>) => Promise<...>' is not assignable to parameter of type 'ProcedureHandler<Record<never, never>, unknown, { transactions: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; ... 8 more ...; adminNote?: string | ... 1 more ... | undefined; }[]; }, MergedErrorMap<...>, Record<...>>'.
+  Type 'Promise<{ transactions: { id: string; userId: string; type: TransactionType; amount: number; status: TransactionStatus; reference: string; }[]; }>' is not assignable to type 'Promisable<{ transactions: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; ... 6 more ...; adminNote?: string | ... 1 more ... | undefined; }[]; }>'.
+    Type 'Promise<{ transactions: { id: string; userId: string; type: TransactionType; amount: number; status: TransactionStatus; reference: string; }[]; }>' is not assignable to type 'PromiseLike<{ transactions: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; ... 6 more ...; adminNote?: string | ... 1 more ... | undefined; }[]; }>'.
+      Types of property 'then' are incompatible.
+        Type '<TResult1 = { transactions: { id: string; userId: string; type: TransactionType; amount: number; status: TransactionStatus; reference: string; }[]; }, TResult2 = never>(onfulfilled?: ((value: { ...; }) => TResult1 | PromiseLike<...>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | ....' is not assignable to type '<TResult1 = { transactions: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; ... 6 more ...; adminNote?: string | ... 1 more ... | undefined; }[]; }, TResult2 = never>(onfulfilled?: ((value: { ...; }) =...'.
+          Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+            Types of parameters 'value' and 'value' are incompatible.
+              Type '{ transactions: { id: string; userId: string; type: $Enums.TransactionType; amount: number; status: $Enums.TransactionStatus; reference: string; }[]; }' is not assignable to type '{ transactions: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; ... 6 more ...; adminNote?: string | ... 1 more ... | undefined; }[]; }'.
+                Types of property 'transactions' are incompatible.
+                  Type '{ id: string; userId: string; type: TransactionType; amount: number; status: TransactionStatus; reference: string; }[]' is not assignable to type '{ type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; updatedAt: Date; ... 5 more ...; adminNote?: string | ... 1 more ... | undefined; }[]'.
+                    Type '{ id: string; userId: string; type: TransactionType; amount: number; status: TransactionStatus; reference: string; }' is missing the following properties from type '{ type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; updatedAt: Date; ... 5 more ...; adminNote?: string | ... 1 more ... | undefined; }': createdAt, updatedAt, source, flagged
+
+[7m7[0m     list: implement(transactionsContract.list).handler(async ({ context }) => {
+[7m [0m [91m                                                       ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/routes/transactions.ts[0m:[93m19[0m:[93m62[0m - [91merror[0m[90m TS2345: [0mArgument of type '({ input, context }: ProcedureHandlerOptions<Record<never, never>, { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; amount: string | number; }, ORPCErrorConstructorMap<MergedErrorMap<Record<never, never>, Record<never, never>>>, Record<...>>) => Promise<...>' is not assignable to parameter of type 'ProcedureHandler<Record<never, never>, { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; amount: string | number; }, { transaction: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | ... 3 more ... | "FAILED"; ... 9 more ...; adminNote?: string | ... 1 more ... | undefined; }; }, MergedErrorMap<...>, Re...'.
+  Type 'Promise<{ transaction: { id: string; userId: string; type: TransactionType; amount: number; status: TransactionStatus; reference: string; }; }>' is not assignable to type 'Promisable<{ transaction: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; ... 6 more ...; adminNote?: string | ... 1 more ... | undefined; }; }>'.
+    Type 'Promise<{ transaction: { id: string; userId: string; type: TransactionType; amount: number; status: TransactionStatus; reference: string; }; }>' is not assignable to type 'PromiseLike<{ transaction: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; ... 6 more ...; adminNote?: string | ... 1 more ... | undefined; }; }>'.
+      Types of property 'then' are incompatible.
+        Type '<TResult1 = { transaction: { id: string; userId: string; type: TransactionType; amount: number; status: TransactionStatus; reference: string; }; }, TResult2 = never>(onfulfilled?: ((value: { transaction: { ...; }; }) => TResult1 | PromiseLike<...>) | null | undefined, onrejected?: ((reason: any) => TResult2 | Promis...' is not assignable to type '<TResult1 = { transaction: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; ... 6 more ...; adminNote?: string | ... 1 more ... | undefined; }; }, TResult2 = never>(onfulfilled?: ((value: { ...; }) => T...'.
+          Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+            Types of parameters 'value' and 'value' are incompatible.
+              Type '{ transaction: { id: string; userId: string; type: $Enums.TransactionType; amount: number; status: $Enums.TransactionStatus; reference: string; }; }' is not assignable to type '{ transaction: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; ... 6 more ...; adminNote?: string | ... 1 more ... | undefined; }; }'.
+                Types of property 'transaction' are incompatible.
+                  Type '{ id: string; userId: string; type: TransactionType; amount: number; status: TransactionStatus; reference: string; }' is missing the following properties from type '{ type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; updatedAt: Date; ... 5 more ...; adminNote?: string | ... 1 more ... | undefined; }': createdAt, updatedAt, source, flagged
+
+[7m19[0m     request: implement(transactionsContract.request).handler(async ({ input, context }) => {
+[7m  [0m [91m                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/routes/transactions.ts[0m:[93m35[0m:[93m62[0m - [91merror[0m[90m TS2345: [0mArgument of type '({ input, context }: ProcedureHandlerOptions<Record<never, never>, { id: string; }, ORPCErrorConstructorMap<MergedErrorMap<Record<never, never>, Record<never, never>>>, Record<...>>) => Promise<...>' is not assignable to parameter of type 'ProcedureHandler<Record<never, never>, { id: string; }, { transaction: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; ... 9 more ...; adminNote?: string | ... 1 more ... | undefined; }; }, MergedErrorMap<...>, Record<...>>'.
+  Type 'Promise<{ transaction: { id: string; userId: string; type: TransactionType; amount: number; status: TransactionStatus; reference: string; }; }>' is not assignable to type 'Promisable<{ transaction: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; ... 6 more ...; adminNote?: string | ... 1 more ... | undefined; }; }>'.
+    Type 'Promise<{ transaction: { id: string; userId: string; type: TransactionType; amount: number; status: TransactionStatus; reference: string; }; }>' is not assignable to type 'PromiseLike<{ transaction: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; ... 6 more ...; adminNote?: string | ... 1 more ... | undefined; }; }>'.
+      Types of property 'then' are incompatible.
+        Type '<TResult1 = { transaction: { id: string; userId: string; type: TransactionType; amount: number; status: TransactionStatus; reference: string; }; }, TResult2 = never>(onfulfilled?: ((value: { transaction: { ...; }; }) => TResult1 | PromiseLike<...>) | null | undefined, onrejected?: ((reason: any) => TResult2 | Promis...' is not assignable to type '<TResult1 = { transaction: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; ... 6 more ...; adminNote?: string | ... 1 more ... | undefined; }; }, TResult2 = never>(onfulfilled?: ((value: { ...; }) => T...'.
+          Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+            Types of parameters 'value' and 'value' are incompatible.
+              Type '{ transaction: { id: string; userId: string; type: $Enums.TransactionType; amount: number; status: $Enums.TransactionStatus; reference: string; }; }' is not assignable to type '{ transaction: { type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; ... 6 more ...; adminNote?: string | ... 1 more ... | undefined; }; }'.
+                Types of property 'transaction' are incompatible.
+                  Type '{ id: string; userId: string; type: TransactionType; amount: number; status: TransactionStatus; reference: string; }' is missing the following properties from type '{ type: "DEPOSIT" | "WITHDRAWAL" | "INTEREST"; status: "PENDING" | "REJECTED" | "COMPLETED" | "PROCESSING" | "FAILED"; id: string; createdAt: Date; userId: string; updatedAt: Date; ... 5 more ...; adminNote?: string | ... 1 more ... | undefined; }': createdAt, updatedAt, source, flagged
+
+[7m35[0m     getById: implement(transactionsContract.getById).handler(async ({ input, context }) => {
+[7m  [0m [91m                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+Found 38 errors in 14 files.
+
+Errors  Files
+     1  src/lib/auditService.ts[90m:2[0m
+     1  src/lib/balanceService.ts[90m:2[0m
+     3  src/middleware/adminGuard.ts[90m:5[0m
+     2  src/routes/admin/dashboard.ts[90m:4[0m
+     4  src/routes/admin/deposits.ts[90m:7[0m
+     1  src/routes/admin/index.ts[90m:15[0m
+     1  src/routes/admin/investments.ts[90m:6[0m
+     1  src/routes/admin/tickets.ts[90m:63[0m
+     1  src/routes/admin/transactions.ts[90m:6[0m
+     4  src/routes/admin/users.ts[90m:8[0m
+     3  src/routes/admin/withdrawals.ts[90m:7[0m
+     3  src/routes/auth.ts[90m:11[0m
+    10  src/routes/investments.ts[90m:7[0m
+     3  src/routes/transactions.ts[90m:7[0m

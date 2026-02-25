@@ -1,0 +1,283 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                String                  @id @default(cuid())
+  email             String                  @unique
+  password          String // bcrypt hash
+  role              Role                    @default(USER)
+  kycStatus         KycStatus               @default(PENDING)
+  isActive          Boolean                 @default(true)
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
+  
+  balance           UserBalance?
+  investments       Investment[]
+  transactions      Transaction[]
+  tickets           SupportTicket[]         @relation("TicketAuthor")
+  assignedTickets   SupportTicket[]         @relation("TicketAssignee")
+  replies           TicketReply[]
+  auditLogs         AuditLog[]
+  refreshTokens     RefreshToken[]
+  ownedAnnouncements Announcement[]        @relation("AnnouncementAuthor")
+  receivedAnnouncements AnnouncementRecipient[]
+  authoredNotes     AdminNote[]             @relation("AdminNoteAuthor")
+
+  @@index([email])
+  @@index([role])
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([userId])
+}
+
+model InvestmentPlan {
+  id            String    @id @default(cuid())
+  name          String
+  description   String
+  minimumAmount Decimal   @db.Decimal(18, 8)
+  maximumAmount Decimal   @db.Decimal(18, 8)
+  roiPercent    Decimal   @db.Decimal(5, 2)
+  durationDays  Int
+  isActive      Boolean   @default(true)
+  isFeatured    Boolean   @default(false)
+  isArchived    Boolean   @default(false)
+  riskLevel     RiskLevel @default(MEDIUM)
+  displayOrder  Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  investments Investment[]
+
+  @@index([isActive])
+  @@index([displayOrder])
+}
+
+model UserBalance {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  available Decimal  @db.Decimal(18, 8) @default(0)
+  invested  Decimal  @db.Decimal(18, 8) @default(0)
+  earnings  Decimal  @db.Decimal(18, 8) @default(0)
+  bonus     Decimal  @db.Decimal(18, 8) @default(0)
+  pending   Decimal  @db.Decimal(18, 8) @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Investment {
+  id          String           @id @default(cuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id], onDelete: Restrict)
+  planId      String
+  plan        InvestmentPlan   @relation(fields: [planId], references: [id])
+  amount      Decimal          @db.Decimal(18, 8)
+  status      InvestmentStatus @default(ACTIVE)
+  roi         Decimal          @db.Decimal(5, 2)
+  isPaused    Boolean          @default(false)
+  adminNote   String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([planId])
+}
+
+model Transaction {
+  id        String            @id @default(cuid())
+  userId    String
+  user      User              @relation(fields: [userId], references: [id], onDelete: Restrict)
+  type      TransactionType
+  amount    Decimal           @db.Decimal(18, 8)
+  status    TransactionStatus @default(PENDING)
+  reference String            @unique @default(cuid())
+  source    TransactionSource @default(USER)
+  flagged   Boolean           @default(false)
+  adminNote String?
+  metadata  Json?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@index([userId])
+  @@index([reference])
+  @@index([status])
+}
+
+model SupportTicket {
+  id         String         @id @default(cuid())
+  userId     String
+  user       User           @relation("TicketAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  subject    String
+  message    String
+  status     TicketStatus   @default(OPEN)
+  priority   TicketPriority @default(MEDIUM)
+  assignedTo String?
+  assignee   User?          @relation("TicketAssignee", fields: [assignedTo], references: [id])
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  replies TicketReply[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([assignedTo])
+}
+
+model TicketReply {
+  id         String        @id @default(cuid())
+  ticketId   String
+  ticket     SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorId   String
+  author     User          @relation(fields: [authorId], references: [id])
+  message    String
+  isInternal Boolean       @default(false)
+  createdAt  DateTime      @default(now())
+
+  @@index([ticketId])
+  @@index([authorId])
+}
+
+model AdminNote {
+  id         String   @id @default(cuid())
+  adminId    String
+  admin      User     @relation("AdminNoteAuthor", fields: [adminId], references: [id])
+  targetType String // "user" | "transaction" | "ticket" | "investment"
+  targetId   String
+  note       String
+  isInternal Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  @@index([targetType, targetId])
+  @@index([adminId])
+}
+
+model Announcement {
+  id        String           @id @default(cuid())
+  title     String
+  body      String
+  type      AnnouncementType @default(INFO)
+  isActive  Boolean          @default(true)
+  targetAll Boolean          @default(true)
+  expiresAt DateTime?
+  createdBy String
+  admin     User             @relation("AnnouncementAuthor", fields: [createdBy], references: [id])
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  recipients AnnouncementRecipient[]
+
+  @@index([isActive])
+  @@index([expiresAt])
+}
+
+model AnnouncementRecipient {
+  id             String       @id @default(cuid())
+  announcementId String
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  readAt         DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@unique([announcementId, userId])
+  @@index([userId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json? // For before/after snapshots
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum KycStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum InvestmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  INTEREST
+}
+
+enum TransactionStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REJECTED
+}
+
+enum TransactionSource {
+  USER
+  ADMIN_OVERRIDE
+  SYSTEM
+  REVERSAL
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum AnnouncementType {
+  INFO
+  WARNING
+  MAINTENANCE
+  PROMOTION
+}

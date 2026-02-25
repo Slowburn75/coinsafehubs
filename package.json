@@ -1,0 +1,32 @@
+{
+    "packageManager": "bun@1.0.0",
+    "name": "coinsafehub-monorepo",
+    "private": true,
+    "engines": {
+        "node": ">=20.0.0"
+    },
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "scripts": {
+        "dev": "turbo dev",
+        "build": "turbo build",
+        "lint": "turbo lint",
+        "typecheck": "turbo typecheck",
+        "db:generate": "turbo db:generate",
+        "db:push": "turbo db:push",
+        "db:seed": "turbo db:seed"
+    },
+    "devDependencies": {
+        "turbo": "latest",
+        "typescript": "^5.0.0",
+        "@types/node": "^20.0.0",
+        "prettier": "^3.0.0"
+    },
+    "dependencies": {
+        "@orpc/client": "^1.13.5",
+        "@orpc/react-query": "^1.13.5",
+        "@orpc/server": "^1.13.5"
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "extends": "@repo/config/tsconfig.base.json",
+    "compilerOptions": {
+        "declaration": true,
+        "composite": true,
+        "baseUrl": ".",
+        "outDir": "dist"
+    },
+    "include": [
+        "src/**/*",
+        "prisma/**/*"
+    ]
+}
