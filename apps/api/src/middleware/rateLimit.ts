@@ -1,5 +1,5 @@
 import { Context, Next } from 'hono'
-import { AppError } from '../utils/errors'
+import { RateLimitError } from '../utils/errors'
 
 // Simplified memory-based rate limiting for demonstration.
 // In production, redis should be used here.
@@ -10,13 +10,14 @@ const createLimiter = (max: number, windowMs: number) => {
     return async (c: Context, next: Next) => {
         const ip = c.req.header('x-forwarded-for') || '127.0.0.1'
 
-        // Simplistic memory check
         const now = Date.now()
         const record = store.get(ip)
 
         if (record && record.resetTime > now) {
             if (record.count >= max) {
-                throw new AppError('Too many requests', 'RATE_LIMIT_EXCEEDED', 429)
+                const retryAfter = Math.ceil((record.resetTime - now) / 1000)
+                c.header('Retry-After', retryAfter.toString())
+                throw new RateLimitError(`You have made too many requests. Please try again in ${retryAfter} seconds.`, retryAfter)
             }
             record.count++
         } else {
@@ -27,5 +28,5 @@ const createLimiter = (max: number, windowMs: number) => {
     }
 }
 
-export const globalRateLimit = createLimiter(100, 15 * 60 * 1000)
-export const authRateLimit = createLimiter(5, 15 * 60 * 1000)
+export const globalRateLimit = createLimiter(1000, 15 * 60 * 1000)
+export const authRateLimit = createLimiter(50, 15 * 60 * 1000)

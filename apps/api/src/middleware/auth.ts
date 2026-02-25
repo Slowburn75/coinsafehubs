@@ -1,20 +1,23 @@
 import { Context, Next } from 'hono'
 import { verifyAccessToken } from '../lib/jwt'
-import { AppError } from '../utils/errors'
+import { AppError, AuthError } from '../utils/errors'
 import { getCookie } from 'hono/cookie'
 
 export const checkAuth = async (c: Context, next: Next) => {
     const token = getCookie(c, 'accessToken')
 
     if (!token) {
-        throw new AppError('Unauthorized', 'UNAUTHORIZED', 401)
+        throw new AuthError('Authentication required.', 'AUTH_REQUIRED', 401)
     }
 
     try {
         const payload = verifyAccessToken(token)
         c.set('user', payload)
-    } catch (err) {
-        throw new AppError('Invalid or expired token', 'UNAUTHORIZED', 401)
+    } catch (err: any) {
+        if (err.name === 'TokenExpiredError') {
+            throw new AuthError('Session expired. Please log in again.', 'AUTH_TOKEN_EXPIRED', 401)
+        }
+        throw new AuthError('Invalid authentication token.', 'AUTH_TOKEN_INVALID', 401)
     }
 
     await next()
