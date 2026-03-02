@@ -23,7 +23,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { orpc } from '@/lib/orpc'
-import { useAuth } from '@/lib/AuthProvider'
 
 const SignupSchema = z.object({
   email: z.string().email(),
@@ -38,7 +37,6 @@ type SignupFormValues = z.infer<typeof SignupSchema>
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter()
-  const { refetch } = useAuth()
   const [errorMsg, setErrorMsg] = useState('')
   const [success, setSuccess] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -81,12 +79,13 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   }
 
   const registerMutation = useMutation(orpc.auth.register.mutationOptions({
-    onSuccess: async () => {
-      setSuccess('Account created! Logging you in...')
-      await refetch()
+    onSuccess: async (_result, variables) => {
+      sessionStorage.setItem('verificationEmail', variables.email)
+      sessionStorage.setItem('signupTime', Date.now().toString())
+      setSuccess('Account created! Verify your email to continue...')
       setTimeout(() => {
-        router.push('/dashboard')
-      }, 1500)
+        router.push('/otp')
+      }, 1000)
     },
     onError: (error: any) => {
       setErrorMsg(error.message || 'Signup failed. Please try again.')

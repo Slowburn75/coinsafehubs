@@ -11,6 +11,9 @@ model User {
   id                String                  @id @default(cuid())
   email             String                  @unique
   password          String // bcrypt hash
+  firstName         String?
+  lastName          String?
+  phone             String?                 @unique
   role              Role                    @default(USER)
   kycStatus         KycStatus               @default(PENDING)
   isActive          Boolean                 @default(true)
@@ -18,8 +21,13 @@ model User {
   updatedAt         DateTime                @updatedAt
   
   balance           UserBalance?
+  wallets           Wallet[]
+  passwordResets    PasswordReset[]
+  emailVerifications EmailVerification[]
+  notificationSettings NotificationSettings?
   investments       Investment[]
   transactions      Transaction[]
+  approvedTransactions Transaction[] @relation("TransactionApprover")
   tickets           SupportTicket[]         @relation("TicketAuthor")
   assignedTickets   SupportTicket[]         @relation("TicketAssignee")
   replies           TicketReply[]
@@ -112,6 +120,9 @@ model Transaction {
   flagged   Boolean           @default(false)
   adminNote String?
   metadata  Json?
+  approvedBy String?
+  approvedByUser User? @relation("TransactionApprover", fields: [approvedBy], references: [id], onDelete: SetNull)
+  processedAt DateTime?
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
 
@@ -198,6 +209,56 @@ model AnnouncementRecipient {
 
   @@unique([announcementId, userId])
   @@index([userId])
+}
+
+
+model Wallet {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  address   String
+  network   String
+  isPrimary Boolean  @default(false)
+  isVerified Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  @@unique([network, address])
+  @@index([userId])
+}
+
+model PasswordReset {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime @default(now())
+
+  @@index([userId, expiresAt])
+}
+
+model EmailVerification {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  codeHash   String
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime @default(now())
+
+  @@index([userId, expiresAt])
+}
+
+model NotificationSettings {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  emailDeposits       Boolean  @default(true)
+  emailWithdrawals    Boolean  @default(true)
+  emailSecurityAlerts Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 model AuditLog {

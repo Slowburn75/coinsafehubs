@@ -1,27 +1,29 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from '@/components/ui/card'
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
+} from '@/components/ui/field'
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp"
-import { Loader2, Mail, AlertCircle } from "lucide-react"
+} from '@/components/ui/input-otp'
+import { AlertCircle, Loader2, Mail } from 'lucide-react'
+
+const OTP_EXPIRY_SECONDS = 10 * 60
 
 export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter()
@@ -32,33 +34,30 @@ export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [resendCooldown, setResendCooldown] = useState(0)
-  const [timeRemaining, setTimeRemaining] = useState(600) // 10 minutes in seconds
+  const [timeRemaining, setTimeRemaining] = useState(OTP_EXPIRY_SECONDS)
 
-  // Load email from session storage and check if expired
   useEffect(() => {
     const storedEmail = sessionStorage.getItem('verificationEmail')
     const signupTime = sessionStorage.getItem('signupTime')
-    
+
     if (!storedEmail) {
-      router.push('/signup')
+      router.replace('/signup')
       return
     }
-    
+
     setEmail(storedEmail)
 
-    // Calculate time remaining (10 minute expiry)
     if (signupTime) {
-      const elapsed = Math.floor((Date.now() - parseInt(signupTime)) / 1000)
-      const remaining = Math.max(600 - elapsed, 0)
+      const elapsed = Math.floor((Date.now() - Number.parseInt(signupTime, 10)) / 1000)
+      const remaining = Math.max(OTP_EXPIRY_SECONDS - elapsed, 0)
       setTimeRemaining(remaining)
-      
+
       if (remaining === 0) {
         setError('Verification code has expired. Please request a new one.')
       }
     }
   }, [router])
 
-  // Countdown timer for OTP expiry
   useEffect(() => {
     if (timeRemaining <= 0) return
 
@@ -75,7 +74,6 @@ export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
     return () => clearInterval(timer)
   }, [timeRemaining])
 
-  // Resend cooldown timer
   useEffect(() => {
     if (resendCooldown <= 0) return
 
@@ -86,32 +84,26 @@ export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
     return () => clearInterval(timer)
   }, [resendCooldown])
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
+  const formattedTime = useMemo(() => {
+    const mins = Math.floor(timeRemaining / 60)
+    const secs = timeRemaining % 60
     return `${mins}:${secs.toString().padStart(2, '0')}`
-  }
+  }, [timeRemaining])
 
-  const maskEmail = (email: string) => {
-    const [username, domain] = email.split('@')
-    if (!username || !domain) return email
-    const maskedUsername = username[0] + '*'.repeat(username.length - 2) + username[username.length - 1]
+  const maskEmail = (rawEmail: string) => {
+    const [username, domain] = rawEmail.split('@')
+    if (!username || !domain) return rawEmail
+    if (username.length <= 2) return `${username[0] ?? ''}*@${domain}`
+
+    const maskedUsername =
+      username[0] + '*'.repeat(username.length - 2) + username[username.length - 1]
+
     return `${maskedUsername}@${domain}`
   }
 
-  const handleOtpChange = (value: string) => {
-    setOtp(value)
-    setError('')
-    
-    // Auto-submit when 6 digits are entered
-    if (value.length === 6) {
-      handleSubmit(value)
-    }
-  }
-
   const handleSubmit = async (otpValue?: string) => {
-    const codeToVerify = otpValue || otp
-    
+    const codeToVerify = otpValue ?? otp
+
     if (codeToVerify.length !== 6) {
       setError('Please enter a valid 6-digit code')
       return
@@ -127,59 +119,49 @@ export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
     setSuccess('')
 
     try {
-      // TODO: Implement backend endpoint for email verification
-      const response = await fetch(``, {
+      const response = await fetch('/api/auth/otp/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: email,
-          otp: parseInt(codeToVerify, 10)  // Convert to number
+          email,
+          otp: codeToVerify,
         }),
       })
 
-      const data = await response.json()
-      
+      const data = (await response.json()) as { message?: string; token?: string }
+
       if (response.ok) {
-        setSuccess('Account verified successfully! Redirecting...')
-        
-        // Store auth token if provided
+        setSuccess('Account verified successfully! Redirecting to login...')
         if (data.token) {
           sessionStorage.setItem('authToken', data.token)
-          // Or use: localStorage.setItem('authToken', data.token)
         }
 
-        // Clear verification data
         sessionStorage.removeItem('verificationEmail')
         sessionStorage.removeItem('signupTime')
-        
-        // Redirect to dashboard or login
+
         setTimeout(() => {
-          router.push('/dashboard') // or '/login' if they need to sign in
-        }, 1500)
+          router.push('/login')
+        }, 1200)
       } else {
-        if (response.status === 400) {
-          setError('Invalid verification code. Please try again.')
-        } else if (response.status === 410) {
-          setError('Verification code has expired. Please request a new one.')
-        } else if (response.status === 404) {
-          setError('Account not found. Please sign up again.')
-        } else {
-          setError(data.message || 'Verification failed. Please try again.')
-        }
-        setOtp('') // Clear OTP on error
+        setError(data.message || 'Verification failed. Please try again.')
+        setOtp('')
       }
-    } catch (error) {
-      if (error instanceof TypeError) {
-        setError('Network error. Please check your connection.')
-      } else {
-        setError('An unexpected error occurred. Please try again.')
-      }
-      console.error('Verification error:', error)
+    } catch {
+      setError('Network error. Please check your connection and try again.')
       setOtp('')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleOtpChange = (value: string) => {
+    setOtp(value)
+    setError('')
+
+    if (value.length === 6 && !isLoading) {
+      handleSubmit(value)
     }
   }
 
@@ -191,41 +173,27 @@ export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
     setSuccess('')
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/resend-otp`, {
+      const response = await fetch('/api/auth/otp/resend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email: email
-        }),
+        body: JSON.stringify({ email }),
       })
 
-      const data = await response.json()
-      
+      const data = (await response.json()) as { message?: string }
+
       if (response.ok) {
-        setSuccess('Verification code sent! Check your email.')
-        setResendCooldown(60) // 60 second cooldown
-        setTimeRemaining(600) // Reset to 10 minutes
+        setSuccess(data.message || 'Verification code sent. Check your inbox.')
+        setResendCooldown(60)
+        setTimeRemaining(OTP_EXPIRY_SECONDS)
         sessionStorage.setItem('signupTime', Date.now().toString())
-        setOtp('') // Clear current OTP
+        setOtp('')
       } else {
-        if (response.status === 429) {
-          setError('Too many requests. Please wait before requesting again.')
-          setResendCooldown(60)
-        } else if (response.status === 404) {
-          setError('Account not found. Please sign up again.')
-        } else {
-          setError(data.message || 'Failed to resend code. Please try again.')
-        }
+        setError(data.message || 'Failed to resend code. Please try again.')
       }
-    } catch (error) {
-      if (error instanceof TypeError) {
-        setError('Network error. Please check your connection.')
-      } else {
-        setError('Failed to resend code. Please try again.')
-      }
-      console.error('Resend error:', error)
+    } catch {
+      setError('Network error. Please check your connection and try again.')
     } finally {
       setIsResending(false)
     }
@@ -253,9 +221,9 @@ export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="otp">Verification code</FieldLabel>
-                <InputOTP 
-                  maxLength={6} 
-                  id="otp" 
+                <InputOTP
+                  id="otp"
+                  maxLength={6}
                   value={otp}
                   onChange={handleOtpChange}
                   disabled={timeRemaining === 0}
@@ -270,13 +238,11 @@ export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
                     <InputOTPSlot index={5} />
                   </InputOTPGroup>
                 </InputOTP>
-                
+
                 {timeRemaining > 0 ? (
-                  <FieldDescription>
-                    Code expires in {formatTime(timeRemaining)}
-                  </FieldDescription>
+                  <FieldDescription>Code expires in {formattedTime}</FieldDescription>
                 ) : (
-                  <FieldDescription className="text-red-500 flex items-center gap-1">
+                  <FieldDescription className="flex items-center gap-1 text-red-500">
                     <AlertCircle size={14} />
                     Code has expired
                   </FieldDescription>
@@ -284,21 +250,27 @@ export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
               </Field>
 
               {error && (
-                <div className="text-sm text-red-600 p-3 bg-red-50 rounded-md border border-red-200 flex items-start gap-2" role="alert">
+                <div
+                  className="flex items-start gap-2 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-600"
+                  role="alert"
+                >
                   <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
                   <span>{error}</span>
                 </div>
               )}
 
               {success && (
-                <div className="text-sm text-green-700 p-3 bg-green-50 rounded-md border border-green-200" role="alert">
+                <div
+                  className="rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-700"
+                  role="alert"
+                >
                   {success}
                 </div>
               )}
 
               <FieldGroup>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isLoading || otp.length !== 6 || timeRemaining === 0}
                   className="w-full"
                 >
@@ -311,16 +283,20 @@ export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
                     'Verify'
                   )}
                 </Button>
-                
+
                 <FieldDescription className="text-center">
                   Didn&apos;t receive the code?{' '}
-                  <button 
+                  <button
                     type="button"
                     onClick={handleResendOtp}
                     disabled={resendCooldown > 0 || isResending}
-                    className="text-primary hover:underline font-medium disabled:text-gray-400 disabled:no-underline disabled:cursor-not-allowed"
+                    className="font-medium text-primary hover:underline disabled:cursor-not-allowed disabled:text-gray-400 disabled:no-underline"
                   >
-                    {isResending ? 'Sending...' : resendCooldown > 0 ? `Resend (${resendCooldown}s)` : 'Resend'}
+                    {isResending
+                      ? 'Sending...'
+                      : resendCooldown > 0
+                        ? `Resend (${resendCooldown}s)`
+                        : 'Resend'}
                   </button>
                 </FieldDescription>
 
