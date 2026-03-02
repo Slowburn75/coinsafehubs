@@ -1,14 +1,21 @@
 import * as jwt from 'jsonwebtoken'
 import { env } from '../utils/env'
 
-export const signAccessToken = (payload: any) => {
-    return jwt.sign(payload, env.JWT_SECRET, { expiresIn: '15m' })
+type AccessTokenPayload = { id: string; email: string; role: string }
+type RefreshTokenPayload = { id: string }
+
+export const signAccessToken = (payload: AccessTokenPayload) => {
+  return jwt.sign(payload, env.JWT_SECRET as jwt.Secret, {
+    expiresIn: env.ACCESS_TOKEN_TTL as jwt.SignOptions['expiresIn'],
+  })
 }
 
-export const signRefreshToken = (payload: any) => {
-    return jwt.sign(payload, env.JWT_SECRET, { expiresIn: '7d' })
+export const signRefreshToken = (payload: RefreshTokenPayload) => {
+  return jwt.sign(payload, env.JWT_REFRESH_SECRET as jwt.Secret, {
+    expiresIn: `${env.REFRESH_TOKEN_TTL_DAYS}d` as jwt.SignOptions['expiresIn'],
+  })
 }
 
-export const verifyAccessToken = (token: string) => {
-    return jwt.verify(token, env.JWT_SECRET)
-}
+export const verifyAccessToken = (token: string) => jwt.verify(token, env.JWT_SECRET as jwt.Secret)
+
+export const verifyRefreshToken = (token: string) => jwt.verify(token, env.JWT_REFRESH_SECRET as jwt.Secret)
